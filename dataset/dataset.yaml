@@ -1,0 +1,5 @@
+path: /home/amartinez/TFG/dataset/
+train: images/train
+val: images/val
+nc: 11
+names: ["dog", "cat", "deer", "squirrel", "raccoon", "bobcat", "coyote", "bird", "rabbit", "opossum", "other"]
