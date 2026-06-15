@@ -2,6 +2,7 @@ import os
 from PIL import Image, ImageEnhance
 import json
 import random
+import copy
 
 
 def preprocessing(image_list, img_out, label_out, annotations, categories):
@@ -63,7 +64,7 @@ def preprocessing(image_list, img_out, label_out, annotations, categories):
 
 def dataAugmentation(img, aug_type):
     if aug_type == "flip":
-        return img.transpose(Image.FLIP_LEFT_RIGHT)
+        return img.transpose(Image.FLIP_LEFT_RIGHT), 0
 
     elif aug_type == "crop":
         width, height = img.size
@@ -75,20 +76,48 @@ def dataAugmentation(img, aug_type):
         right = int(width * (1 - crop_percent))
         bottom = int(height * (1 - crop_percent))
 
-        return img.crop((left, top, right, bottom))
+        return img.crop((left, top, right, bottom)), crop_percent
         
     elif aug_type == "bright":
         factor = random.uniform(0.8, 1.2)
         
-        return ImageEnhance.Brightness(img).enhance(factor)
+        return ImageEnhance.Brightness(img).enhance(factor), 0
     
     elif aug_type == "contrast":
         factor = random.uniform(0.8, 1.2)
         
-        return ImageEnhance.Contrast(img).enhance(factor)
+        return ImageEnhance.Contrast(img).enhance(factor), 0
 
-    return img
+    return img, 0
+    
 
+def changeAnnotations(annotations, crop_percent, width, height):
+    new_annotations = []
+    
+    for ann in annotations:
+        ann = ann.copy()
+        x, y, w, h = ann["bbox"]
+    
+        if crop_percent == 0:
+            new_x = width - (x + w)
+            ann["bbox"] = [new_x, y, w, h]
+            new_annotations.append(ann)
+            
+        else:
+            new_x = x - (width * crop_percent)
+            new_y = y - (height * crop_percent)
+            new_width = width * (1 - 2 * crop_percent)
+            new_height = height * (1 - 2 * crop_percent)
+
+            new_width = min(new_width, new_x + w) - max(0, new_x)
+            new_height = min(new_height, new_y + h) - max(0, new_y)
+            
+            if new_width > 0 and new_height > 0:
+                ann["bbox"] = [max(0, new_x), max(0, new_y), new_width, new_height]
+                new_annotations.append(ann)
+                
+    return new_annotations
+                
 
 
 def createDataset():
@@ -178,7 +207,7 @@ def createDataset():
         
                     aug_type = random.choice(["flip", "crop", "bright", "contrast"])
         
-                    aug_img = dataAugmentation(img, aug_type)
+                    aug_img, crop_percent = dataAugmentation(img, aug_type)
         
                     aug_img.save(dst_path)
         
@@ -189,8 +218,12 @@ def createDataset():
         
                     if original_id in annotations:
                         if aug_type == "bright" or aug_type == "contrast":
-                            annotations[new_id] = annotations[original_id]                                                                   
-        
+                            annotations[new_id] = annotations[original_id]
+                            
+                        else:  
+                            original_width, original_height = img.size
+                            annotations[new_id] = changeAnnotations(annotations[original_id], crop_percent, original_width, original_height)  
+                                                                                         
                     aug_count += 1
         
                 except Exception as e:
