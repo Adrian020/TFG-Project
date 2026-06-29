@@ -32,3 +32,14 @@ def detectionModel():
         save=True,
         stream=True,
     )
+    
+def predictImage():
+    model = YOLO("/home/amartinez/TFG/runs/detect/train-12/weights/best.pt")
+    img_path = r"D:\TFG\cct_images\cct_images\5a2e1320-23d2-11e8-a6a3-ec086b02610b.jpg"
+    img = cv2.imread(img_path)
+    img = cv2.resize(img, (640, 640))
+
+    results = model.predict(
+        source=img,
+        save=True,
+    )

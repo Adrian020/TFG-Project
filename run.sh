@@ -15,9 +15,6 @@ echo "CUDA_VISIBLE_DEVICES = ${CUDA_VISIBLE_DEVICES:-<no-set>}"
 nvidia-smi
 echo "=========================================="
 
-rm -r "/home/amartinez/TFG/dataset/images/train/"
-rm -r "/home/amartinez/TFG/dataset/images/val/"
-rm -r "/home/amartinez/TFG/dataset/labels/train/"
-rm -r "/home/amartinez/TFG/dataset/labels/val/"
+
 
 python main.py
