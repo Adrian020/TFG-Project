@@ -26,6 +26,8 @@ In wildlife monitoring studies, the manual analysis and classification of the ph
 
 - Ejecutar el archivo bash.
 
+Hay cuatro ficheros básicos. El fichero preprocess.py tiene las funciones relacionadas con el preproceso de las imagenes. El fichero detection.py presenta las funciones con el entranamiento, validación y predicción del modelo. El fichero results.py contiene algunas funciones que me han ayudado a respresentar los resultados de forma visual. Y por último, el fichero main.py es donde se hacen las llamadas de las funciones del resto de ficheros.
+
 ---
 
 ## **Resultados**
