@@ -30,3 +30,12 @@ In wildlife monitoring studies, the manual analysis and classification of the ph
 
 ## **Resultados**
 
+<table> <tr> <td align="center"> <img src="ImagesReadme/RabbitPrediction.png" width="400"><br> <b>Predicción de imagen del dataset</b> </td> <td align="center"> <img src="ImagesReadme/RabbitActivationMap.png" width="400"><br> <b>Activation Map de imagen del dataset</b> </td> </tr> </table> <br> <p align="center"> <img src="ImagesReadme/ConfusionMatrixNormalized.png" width="700"><br> <b>Confusion Matrix del mejor modelo del proyecto</b> </p>
+
+---
+
+## **Autor y Tutor**
+
+- Autor: Adrián Martínez García
+
+- Tutor: Mehmet Oguz Mulayim
